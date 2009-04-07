@@ -31,7 +31,7 @@ module LocusFocus
               attaching = @owner.attachings.find(:first, :conditions => ['asset_id = ?', asset_id])
               attachable = attaching.attachable
               raise ActiveRecord::RecordNotFound unless attaching
-              attaching.destroy
+              result = attaching.destroy
               
               asset = Asset.find(asset_id)
               if asset.attachings.empty? && delete_if_no_attachings# delete if no longer attached to anything
@@ -41,6 +41,7 @@ module LocusFocus
                 asset.data.send(:flush_deletes)
                 asset.save # needed to permanently remove file name and urls 
               end
+              result
             end
             
             protected
