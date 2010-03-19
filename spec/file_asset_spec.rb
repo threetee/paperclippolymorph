@@ -1,8 +1,8 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-describe Asset do
+describe FileAsset do
   before(:each) do
-    @asset = Asset.new
+    @asset = FileAsset.new
     @uploaded_image = uploaded_jpeg("#{RAILS_ROOT}/vendor/plugins/paperclip_polymorph/spec/fixtures/assets/rails.png")
     @uploaded_text = uploaded_txt("#{RAILS_ROOT}/vendor/plugins/paperclip_polymorph/spec/fixtures/assets/sample.txt")
   end

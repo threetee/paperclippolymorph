@@ -39,10 +39,10 @@ def uploaded_txt(path, filename = nil)
   uploaded_file(path, 'text/plain', filename)
 end
 
-def create_asset(opts = {})
+def create_file_asset(opts = {})
   lambda do
-    @asset = Asset.create(opts)
-  end.should change(Asset, :count).by(1)
-  @asset
+    @file_asset = FileAsset.create(opts)
+  end.should change(FileAsset, :count).by(1)
+  @file_asset
 end
 

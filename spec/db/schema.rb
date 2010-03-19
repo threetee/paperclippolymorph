@@ -10,7 +10,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.text     "body"
   end
 
-  create_table "assets", :force => true do |t|
+  create_table "file_assets", :force => true do |t|
     t.string   "data_file_name"
     t.string   "data_content_type"
     t.integer  "data_file_size"
@@ -20,11 +20,11 @@ ActiveRecord::Schema.define(:version => 0) do
     t.integer  "account_id"
   end
 
-  add_index "assets", ["data_file_name"], :name => "index_assets_on_data_file_name", :unique => true
+  add_index "file_assets", ["data_file_name"], :name => "index_file_assets_on_data_file_name", :unique => true
 
   create_table "attachings", :force => true do |t|
     t.integer  "attachable_id"
-    t.integer  "asset_id"
+    t.integer  "file_asset_id"
     t.string   "attachable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
