@@ -2,7 +2,7 @@ ActiveRecord::Schema.define(:version => 0) do
   create_table "mock_essays", :force => true do |t|
     t.string   "title"
     t.text     "body"
-    t.integer  "assets_count", :default => 0
+    t.integer  "documents_count", :default => 0
   end
 
   create_table "mock_photo_essays", :force => true do |t|

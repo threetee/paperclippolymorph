@@ -5,4 +5,4 @@ Example:
     ./script/generate polymorphic_paperclip
 
     This will create:
-      - A migration, which adds an assets and attachings table.
+      - A migration, which adds a documents and attachings table.

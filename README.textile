@@ -2,7 +2,7 @@ h1. PaperclipPolymorph
 
 This plugin allows users of the Paperclip plugin to easily share attached files between 
 multiple models. Essentially, polymorphic paperclip transparently saves the attached files
-into a separate asset's table and associates the the model to the document through a polymorphic
+into a separate documents table and associates the model to the document through a polymorphic
 _attachings_ table.
 
 The Paperclip Plugin must also be installed for PolyMorphicPaperclip to work.
@@ -22,8 +22,8 @@ class Essay < ActiveRecord::Base
   acts_as_polymorphic_paperclip :counter_cache => true
 end
 
-@essay.documents.attach(@asset)
-@essay.documents.document.detach -or- @essay.documents.detach(@asset)
+@essay.documents.attach(@document)
+@essay.documents.document.detach -or- @essay.documents.detach(@document)
 </pre>
 
 h4. Helper methods

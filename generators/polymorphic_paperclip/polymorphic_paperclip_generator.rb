@@ -27,7 +27,7 @@ class PolymorphicPaperclipGenerator < Rails::Generator::Base
         puts "Success!"
         puts
         puts "Dont't Forget to:"
-        puts "  - Add the acts_as_polymorphic_paperclip to the model that accepts assets"
+        puts "  - Add the acts_as_polymorphic_paperclip to the model that accepts documents"
         puts " You will no longer need the has_attached_file argument in your model once you"
         puts " add this plugin."
         puts
