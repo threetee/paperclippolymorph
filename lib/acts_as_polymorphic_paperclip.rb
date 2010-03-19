@@ -18,28 +18,28 @@ module LocusFocus
           class_inheritable_reader :acts_as_polymorphic_paperclip_options
 
           has_many :attachings, :as => :attachable, :dependent => :destroy
-          has_many :file_assets, :through => :attachings do
-            def attach(file_asset_id)
-              file_asset_id = extract_id(file_asset_id)
-              file_asset = FileAsset.find(file_asset_id)
-              @owner.file_assets << file_asset
-              @owner.file_assets(true)
+          has_many :documents, :through => :attachings do
+            def attach(document_id)
+              document_id = extract_id(document_id)
+              document = Document.find(document_id)
+              @owner.documents << document
+              @owner.documents(true)
             end
             
-            def detach(file_asset_id, delete_if_no_attachings = false)
-              file_asset_id = extract_id(file_asset_id)
-              attaching = @owner.attachings.find(:first, :conditions => ['file_asset_id = ?', file_asset_id])
+            def detach(document_id, delete_if_no_attachings = false)
+              document_id = extract_id(document_id)
+              attaching = @owner.attachings.find(:first, :conditions => ['document_id = ?', document_id])
               attachable = attaching.attachable
               raise ActiveRecord::RecordNotFound unless attaching
               result = attaching.destroy
               
-              file_asset = FileAsset.find(file_asset_id)
-              if file_asset.attachings.empty? && delete_if_no_attachings# delete if no longer attached to anything
-                override_default_styles, normalised_styles = attachable.override_default_styles?(file_asset.name)
-                file_asset.data.instance_variable_set("@styles", normalised_styles) if override_default_styles
-                file_asset.data.send(:queue_existing_for_delete)
-                file_asset.data.send(:flush_deletes)
-                file_asset.save # needed to permanently remove file name and urls 
+              document = Document.find(document_id)
+              if document.attachings.empty? && delete_if_no_attachings# delete if no longer attached to anything
+                override_default_styles, normalised_styles = attachable.override_default_styles?(document.name)
+                document.data.instance_variable_set("@styles", normalised_styles) if override_default_styles
+                document.data.send(:queue_existing_for_delete)
+                document.data.send(:flush_deletes)
+                document.save # needed to permanently remove file name and urls 
               end
               result
             end
@@ -64,30 +64,30 @@ module LocusFocus
       module InstanceMethods
         def after_save
           super
-          FileAsset.transaction do
+          Document.transaction do
             if data.is_a?(Array)
               data.each do |data_item|
-                create_and_save_file_asset(data_item) unless data_item.nil? || data_item.blank?
+                create_and_save_document(data_item) unless data_item.nil? || data_item.blank?
               end
             else
-              create_and_save_file_asset(data)
+              create_and_save_document(data)
             end
           end unless data.nil? || data.blank?
         end
         
-        def create_and_save_file_asset(data_item)
-          the_file_asset = FileAsset.find_or_initialize_by_data_file_name(data_item.original_filename)
+        def create_and_save_document(data_item)
+          the_document = Document.find_or_initialize_by_data_file_name(data_item.original_filename)
           override_default_styles, normalised_styles = override_default_styles?(data_item.original_filename)
-          the_file_asset.data.instance_variable_set("@styles", normalised_styles) if override_default_styles
-          the_file_asset.data = data_item
-          if the_file_asset.save
+          the_document.data.instance_variable_set("@styles", normalised_styles) if override_default_styles
+          the_document.data = data_item
+          if the_document.save
   
             # This association may be saved more than once within the same request / response 
             # cycle, which leads to needless DB calls. Now we'll clear out the data attribute
             # once the record is successfully saved any subsequent calls will be ignored.
             data_item = nil
-            Attaching.find_or_create_by_file_asset_id_and_attachable_type_and_attachable_id(:file_asset_id => the_file_asset.id, :attachable_type => self.class.to_s, :attachable_id => self.id)
-            file_assets(true) # implicit reloading
+            Attaching.find_or_create_by_document_id_and_attachable_type_and_attachable_id(:document_id => the_document.id, :attachable_type => self.class.to_s, :attachable_id => self.id)
+            documents(true) # implicit reloading
           end
         end
         def override_default_styles?(filename)

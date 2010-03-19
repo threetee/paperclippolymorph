@@ -1,4 +1,4 @@
-class Asset < ActiveRecord::Base
+class Document < ActiveRecord::Base
   has_many :attachings, :dependent => :destroy
   has_attached_file :data,
                     :styles => { :tiny => "64x64#",
