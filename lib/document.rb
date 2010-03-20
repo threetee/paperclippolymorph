@@ -1,6 +1,7 @@
 class Document < ActiveRecord::Base
   has_many :attachings, :dependent => :destroy
   has_attached_file :data,
+                    :path => ":rails_root/assets/:class/:id/:style/:basename.:extension",
                     :styles => { :tiny => "64x64#",
                                  :small => "176x112#",
                                  :medium => "630x630>",
